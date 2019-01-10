@@ -8,18 +8,18 @@
 
 import UIKit
 @objcMembers
-class EmojiUtils: NSObject {
-    static func emojis(str:String)->[String] {         // @objc
+public class EmojiUtils: NSObject {
+    public static func emojis(str:String)->[String] {         // @objc
         return str.emojis;
     }
-    static func containsOnlyEmoji(str:String)->Bool {         // @objc
+    public static func containsOnlyEmoji(str:String)->Bool {         // @objc
         return str.emojiString == str;
     }
-    static func emojiString(str:String)->String {         // @objc
+    public static func emojiString(str:String)->String {         // @objc
         return str.emojiString;
     }
 
-    static func glyphCount(str:String)->Int {         // @objc
+    public static func glyphCount(str:String)->Int {         // @objc
         return str.glyphCount;
     }
 }
