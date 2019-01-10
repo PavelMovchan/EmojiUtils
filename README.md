@@ -17,7 +17,7 @@ EmojiUtils is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'EmojiUtils'
+pod 'EmojiUtils', :git => 'https://github.com/PavelMovchan/EmojiUtils.git'
 ```
 
 ## Author
