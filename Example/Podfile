@@ -1,0 +1,6 @@
+use_frameworks!
+target 'EmojiUtils_Tests' do
+  pod 'EmojiUtils', :path => '../'
+  
+  
+end

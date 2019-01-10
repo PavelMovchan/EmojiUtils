@@ -1,0 +1,22 @@
+{
+  "name": "EmojiUtils",
+  "version": "0.1.0",
+  "summary": "A short description of EmojiUtils.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/PavelMovchan/EmojiUtils",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "PavelMovchan": "mpv2501@ukr.net"
+  },
+  "source": {
+    "git": "https://github.com/PavelMovchan/EmojiUtils.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "EmojiUtils/Classes/**/*"
+}

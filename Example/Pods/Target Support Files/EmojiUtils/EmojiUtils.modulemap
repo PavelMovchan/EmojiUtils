@@ -1,0 +1,6 @@
+framework module EmojiUtils {
+  umbrella header "EmojiUtils-umbrella.h"
+
+  export *
+  module * { export * }
+}
