@@ -18,11 +18,76 @@ public class EmojiUtils: NSObject {
     public static func emojiString(str:String)->String {         // @objc
         return str.emojiString;
     }
-
     public static func glyphCount(str:String)->Int {         // @objc
         return str.glyphCount;
     }
+
+    public static func getEmojiUIImage(str:String, textViewHeight:CGFloat, charWidth:CGFloat)->UIImage
+    {
+        return str.image(textViewHeight: textViewHeight, charWidth: charWidth)!;
+    }
+
+    public static func changeContrast(img:UIImage, value:Float)->UIImage
+    {
+        return img.changeContrast(image:img, value:value);
+    }
+
+    public static func drawLabelInImage(img:UIImage, label:UILabel)->UIImage
+    {
+        return img.imageWithLabel(label: label);
+    }
 }
+
+extension String {
+    func image(textViewHeight:CGFloat, charWidth:CGFloat) -> UIImage? {
+        let fs = textViewHeight;//44.0;
+        let sw = charWidth;//24.0;
+        let size = CGSize(width: fs, height: fs)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        UIColor.clear.set()
+        let yp = fs/2.0 - sw/2.0;
+        let rect = CGRect(origin: CGPoint(x: yp, y: yp), size:CGSize(width: fs, height: fs))
+        UIRectFill(CGRect(origin: CGPoint(x: 0, y: 0), size: size))
+        (self as AnyObject).draw(in: rect, withAttributes: [.font: UIFont.systemFont(ofSize: CGFloat(sw))])
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+}
+
+extension UIImage {
+    func imageWithLabel(label: UILabel) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(label.bounds.size, false, 0.0)
+        //let rect = CGRect(origin: .zero, size: label.bounds.size)
+        //UIColor.red.setFill()
+        //UIRectFill(rect)
+        label.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img!
+    }
+}
+
+extension UIImage
+{
+    func changeContrast(image: UIImage, value: Float) -> UIImage {
+        let ciImage = CIImage(image: image)
+        let parameters = [
+            "inputSaturation": value
+        ]
+        let outputImage = ciImage?.applyingFilter("CIColorControls", parameters: parameters)
+
+        let originalScale = image.scale
+        let originalOrientation = image.imageOrientation
+
+        if let image = outputImage {
+            let image = UIImage(ciImage: image, scale: originalScale, orientation: originalOrientation)
+            return image
+        }
+        return self;
+    }
+}
+
 
 extension UnicodeScalar {
 
