@@ -9,16 +9,16 @@
 import UIKit
 @objcMembers
 public class EmojiUtils: NSObject {
-    public static func emojis(str:String)->[String] {         // @objc
+    public static func emojis(str:String)->[String] {
         return str.emojis;
     }
-    public static func containsOnlyEmoji(str:String)->Bool {         // @objc
+    public static func containsOnlyEmoji(str:String)->Bool {
         return str.emojiString == str;
     }
-    public static func emojiString(str:String)->String {         // @objc
+    public static func emojiString(str:String)->String {
         return str.emojiString;
     }
-    public static func glyphCount(str:String)->Int {         // @objc
+    public static func glyphCount(str:String)->Int {
         return str.glyphCount;
     }
 
@@ -58,9 +58,6 @@ extension String {
 extension UIImage {
     func imageWithLabel(label: UILabel) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(label.bounds.size, false, 0.0)
-        //let rect = CGRect(origin: .zero, size: label.bounds.size)
-        //UIColor.red.setFill()
-        //UIRectFill(rect)
         label.layer.render(in: UIGraphicsGetCurrentContext()!)
         let img = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -71,20 +68,15 @@ extension UIImage {
 extension UIImage
 {
     func changeContrast(image: UIImage, value: Float) -> UIImage {
-        let ciImage = CIImage(image: image)
+        let inputImage = CIImage(image: image)!
         let parameters = [
-            "inputSaturation": value
+            "inputSaturation": NSNumber(value: value)
         ]
-        let outputImage = ciImage?.applyingFilter("CIColorControls", parameters: parameters)
-
-        let originalScale = image.scale
-        let originalOrientation = image.imageOrientation
-
-        if let image = outputImage {
-            let image = UIImage(ciImage: image, scale: originalScale, orientation: originalOrientation)
-            return image
-        }
-        return self;
+        let outputImage = inputImage.applyingFilter("CIColorControls", parameters: parameters)
+        
+        let context = CIContext(options: nil)
+        let img = context.createCGImage(outputImage, from: outputImage.extent)!
+        return UIImage(cgImage: img)
     }
 }
 
@@ -227,14 +219,6 @@ extension String {
 
         return !isEmpty
             && !unicodeScalars.contains(where: {
-               /* print($0.isEmoji)
-                print($0.isZeroWidthJoiner)
-                print($0.isCancelTagEmoji)
-                print($0.isInvisibleVariationSelector)
-                print($0.isEnclosingKeyup)
-                print($0.isDigitLetter)
-                print($0.isArrow)
-                return false*/
                 !$0.isEmoji
                 && !$0.isZeroWidthJoiner
                 && !$0.isCancelTagEmoji
@@ -258,14 +242,6 @@ extension String {
         var previousScalar: UnicodeScalar?
         var flagCharCount:Int = 0;
         for scalar in emojiScalars {
-            /*print(scalar);
-            print(scalar.isZeroWidthJoiner);
-            print(scalar.isSkinModifier);
-            print(scalar.isInvisibleVariationSelector);
-            print(scalar.isCancelTagEmoji);
-            print(scalar.isEnclosingKeyup);
-            print(scalar.isFlagLetter);
-            print(scalar.isExtraLetterForFlags);*/
             if let prev = previousScalar, ( !prev.isZeroWidthJoiner &&
                                             !scalar.isZeroWidthJoiner &&
                                             !scalar.isInvisibleVariationSelector &&
@@ -287,12 +263,10 @@ extension String {
                 flagCharCount += 1
             }
             currentScalarSet.append(scalar)
-            print(currentScalarSet);
             previousScalar = scalar
         }
 
         scalars.append(currentScalarSet)
-        print(scalars);
         return scalars.map { $0.map{ String($0) } .reduce("", +) }
     }
 
@@ -301,18 +275,13 @@ extension String {
         var chars: [UnicodeScalar] = []
         var previous: UnicodeScalar?
         for cur in unicodeScalars {
-            print(cur);
-            print(cur.isZeroWidthJoiner);
             if let previous = previous, (previous.isZeroWidthJoiner && cur.isEmoji) || (cur.isEnclosingKeyup && !previous.isEmoji) || (cur.isInvisibleVariationSelector && !previous.isEmoji) {
-                //print(previous);
-                //print(previous.isZeroWidthJoiner);
                 chars.append(previous)
                 chars.append(cur)
 
             } else if cur.isEmoji {
                 chars.append(cur)
             }
-            print(chars);
             previous = cur
         }
 
